@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>COE | Center Of Excellence</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/dc28592b31.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="">
+    <link rel="shortcut icon" href="./pac-coe.PNG" type="image/x-icon">
+</head>
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #ffffff;
+        margin: 0;
+    }
+
+    div.col-formpag h1 {
+        margin-left: 1rem;
+        border: 2px outset transparent;
+    }
+
+    div h1 b.coe {
+        color: #c00;
+        font-size: 35px;
+        font-weight: 700;
+    }
+
+    div h1 b.sub-ti {
+        font-size: 12px;
+    }
+
+    div h1 button {
+        width: 3rem;
+        height: 3rem;
+        margin-left: 65rem;
+        font-size: 27px;
+        border: 2px solid #c00;
+        background-color: #c00;
+        color: #ffffff;
+        border-radius: 14rem;
+        cursor: pointer;
+    }
+
+    div h1 button:hover {
+        -webkit-box-shadow: -1px 12px 100px 0px #c00;
+        -moz-box-shadow: -1px 12px 100px 0px #c00;
+        box-shadow: -1px 12px 100px 0px #c00;
+    }
+
+    div h1 button:active {
+        border: 2px solid #000000;
+        background-color: #000000;
+        color: #ffffff;
+    }
+
+    form {
+        margin-top: 2rem;
+    }
+
+    input[name='date-p1'],
+    input[name='date-p2'] {
+        width: 10rem;
+        height: 2.3rem;
+        text-align: center;
+        font-size: 17px;
+        font-weight: 650;
+        border-left: 1px;
+        border-right: 1px;
+        border-top: 1px;
+        outline: 0;
+        box-shadow: 0 0 0 0;
+        cursor: pointer;
+        background-color: #ffffff;
+    }
+
+    input[name='date-p1']::placeholder,
+    input[name='date-p2']::placeholder {
+        text-align: left;
+        text-transform: capitalize;
+        font-weight: 590;
+        font-size: 16px;
+    }
+
+    div.form-container {
+        border: 2px solid transparent;
+        width: 40rem;
+        height: 45rem;
+        text-align: center;
+        margin: auto;
+        margin-top: 1rem;
+    }
+
+    div.col-date {
+        margin: auto;
+        text-align: center;
+    }
+
+    input#tired,
+    input#motivated,
+    button#btn-ghost {
+        color: transparent;
+        border: transparent;
+        background-color: transparent;
+        height: 1px;
+    }
+
+
+    button.mood-btn {
+        height: 3rem;
+        width: 3rem;
+        border-radius: 17rem;
+        border: 1px solid #c00;
+        background-color: #c00;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    button.mood-btn:hover {
+        background-color: transparent;
+        color: #c00;
+        border: 2px solid #c00;
+        font-weight: 640;
+    }
+
+    button.mood-btn:active {
+        background-color: #640202;
+        color: #ffffff;
+        border: 2px solid #640202;
+        font-weight: 640;
+    }
+
+    div.chart-container {
+        height: 30rem;
+        width: 32rem;
+        border: 2px solid transparent;
+        margin: auto;
+    }
+</style>
+
+<body onload="alertPage()">
+    <div id="renderPDF" class="container">
+        <div class="col-formpag">
+            <h1><b class="coe">COE</b> charts <i class="fa-sharp fa-solid fa-chart-simple">
+                    <button class="btn btn-primary btn-lg" onclick="createPDF()" role="button" id="btn1"><i
+                            class="fa-sharp fa-solid fa-download"></i></button></i>
+            </h1>
+        </div>
+        <style>
+            div.mood {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            input#title-pag {
+                width: 30rem;
+                height: 2.6rem;
+                font-size: 20px;
+                font-weight: 700;
+                border-top: 1px;
+                border-left: 1px;
+                border-right: 1px;
+                text-align: center;
+            }
+
+            input#title-pag:focus::-webkit-input-placeholder {
+                color: transparent;
+            }
+
+            input#title-pag:focus {
+                outline: 0;
+            }
+
+            .label-float {
+                position: relative;
+                padding-top: 13px;
+            }
+
+            .label-float input {
+                border: 2px solid #000000;
+                border-radius: 5px;
+                color: #000000;
+                outline: none;
+                min-width: 10rem;
+                font-weight: 640;
+                padding: 15px 20px;
+                font-size: 16.2px;
+                transition: all .1s linear;
+                -webkit-transition: all .1s linear;
+                -moz-transition: all .1s linear;
+                -webkit-appearance: none;
+                background-color: transparent;
+            }
+
+            .label-float input:focus {
+                border: 2px solid #3951b2;
+            }
+
+            .label-float input::placeholder {
+                color: transparent;
+            }
+
+            .label-float label {
+                pointer-events: none;
+                position: absolute;
+                top: calc(50% - 8px);
+                left: 15px;
+                transition: all .1s linear;
+                -webkit-transition: all .1s linear;
+                -moz-transition: all .1s linear;
+                background-color: #ffffff;
+                padding: 5px;
+                box-sizing: border-box;
+            }
+
+            .label-float input:required:invalid+label {
+                color: #000000;
+            }
+
+            .label-float input:focus:required:invalid {
+                border: 2px solid red;
+            }
+
+            .label-float input:required:invalid+label:before {
+                content: '*';
+            }
+
+            .label-float input:focus+label,
+            .label-float input:not(:placeholder-shown)+label {
+                font-size: 14px;
+                top: 0;
+                font-weight: 650;
+                color: #000000;
+            }
+
+            .check-inp label {
+                color: #ffffff;
+            }
+        </style>
+
+        <form>
+            <div class="col-date">
+                <input type="text" placeholder="NOME DO PROJETO" id="title-pag" required /><br>
+                <input name="date-p1" placeholder="data inicial" type="text" onfocus="this.type='date'" required /> /
+                <input name="date-p2" placeholder="data final" onfocus="this.type='date'" type="text" required />
+            </div>
+
+            <div class="form-container">
+                <div class="mood">
+                    <div class="label-float">
+                        <input type="string" name="angry" id="angry" placeholder="pessoas" autocomplete="on" required />
+                        <label>1º Semana</label>
+                        <button class="mood-btn"><i class="fa-sharp fa-solid fa-arrow-down-wide-short"></i></button>
+                    </div>
+                </div>
+                <div class="mood">
+                    <div class="label-float">
+                        <input class="plc-info1" type="string" name="sad" id="sad" placeholder="pessoas"
+                            autocomplete="on" required />
+                        <label>2º Semana</label>
+                        <button class="mood-btn"><i class="fa-sharp fa-solid fa-arrow-down-wide-short"></i></button>
+                    </div>
+                </div>
+                <div class="mood">
+                    <div class="label-float">
+                        <input type="string" name="happy" id="happy" placeholder="pessoas" autocomplete="on" required />
+                        <label>3º Semana</label>
+                        <button class="mood-btn"><i class="fa-sharp fa-solid fa-arrow-down-wide-short"></i></button>
+                    </div>
+                </div>
+                <div class="mood">
+                    <div class="label-float">
+                        <input type="string" name="anxious" id="anxious" placeholder="pessoas" autocomplete="on"
+                            required />
+                        <label>4º Semana</label>
+                        <button class="mood-btn"><i class="fa-sharp fa-solid fa-arrow-down-wide-short"></i></button>
+                    </div>
+                </div>
+                <div class="mood">
+                    <div class="label">
+                        <input type="string" name="motivated" id="motivated" disabled />
+                        <button id="btn-ghost" class="mood-btn">Add <i class="fa-sharp fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="mood">
+                    <input type="string" name="tired" id="tired" placeholder="" disabled />
+                    <button id="btn-ghost" class="mood-btn">Add</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="myChart" width="100%" height="100%"></canvas>
+                </div>
+            </div><br><br><br>
+        </form>
+    </div>
+
+    <script>
+        function func() {
+            var x = document.getElementById("myProgress");
+            x.value = document.getElementById("value").value;
+        }
+
+
+        /*pdf generator*/
+        (function ($) {
+            $.fn.createPdf = function (parametros) {
+
+                var config = {
+                    'fileName': 'html-to-pdf'
+                };
+
+                if (parametros) {
+                    $.extend(config, parametros);
+                }
+
+                var quotes = document.getElementById($(this).attr('id'));
+
+                html2canvas(quotes, {
+                    onrendered: function (canvas) {
+                        var pdf = new jsPDF('p', 'pt', 'letter');
+                        pdf.setFont("Arial");
+                        pdf.setFontType("normal");
+                        pdf.setFontSize(24);
+
+                        for (var i = 0; i <= quotes.clientHeight / 990; i++) {
+                            var srcImg = canvas;
+                            var sX = 0;
+                            var sY = 980 * i;
+                            var sWidth = 4250;
+                            var sHeight = 980;
+                            var dX = 0;
+                            var dY = 0;
+                            var dWidth = 4000;
+                            var dHeight = 980;
+
+                            window.onePageCanvas = document.createElement("canvas");
+                            onePageCanvas.setAttribute('width', 4000);
+                            onePageCanvas.setAttribute('height', 980);
+                            var ctx = onePageCanvas.getContext('2d');
+                            ctx.drawImage(srcImg, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
+
+                            var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+                            var width = onePageCanvas.width;
+                            var height = onePageCanvas.clientHeight;
+
+                            if (i > 0) {
+                                pdf.addPage(612, 791);
+                            }
+
+                            pdf.setPage(i + 1);
+                            pdf.addImage(canvasDataURL, 'PNG', 2, 1, (width * .52), (height * .62));
+                        }
+
+                        pdf.save(config.fileName);
+                    }
+                });
+            };
+        })(jQuery);
+
+
+        function createPDF() {
+            var info = prompt("Digite um nome para seu pdf.");
+            $('#renderPDF').createPdf({
+                'fileName': info
+            });
+        }
+
+        /*date*/
+        jQuery(window).load(function ($) {
+            atualizaRelogio();
+        });
+
+        /*charts*/
+        let chartData = []
+        const ctx = document.getElementById('myChart');
+        const myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Semana-1', 'Semana-2', 'Semana-3', 'Semana-4'],
+                datasets: [{
+                    label: '#ofVotes',
+                    data: chartData,
+                    backgroundColor: [
+                        '#0909FF',
+                        '#033E3E',
+                        '#E41B17',
+                        '#550A35',
+                    ],
+                    borderColor: [
+                        '#ffffff',
+                        '#ffffff',
+                        '#ffffff',
+                        '#ffffff',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                }
+            }
+        });
+
+        function removeData(chart) {
+            chart.data.datasets.forEach((dataset) => {
+                dataset.data.pop();
+            });
+            chart.update();
+        }
+
+        function addData(chart, data) {
+            chart.data.datasets.forEach((dataset) => {
+                dataset.data = [...data]
+            });
+            chart.update();
+        }
+
+        function updateChart(event) {
+
+            event.preventDefault()
+            angryValue = Number(document.getElementById('angry').value);
+            sadValue = Number(document.getElementById('sad').value);
+            happyValue = Number(document.getElementById('happy').value);
+            anxiousValue = Number(document.getElementById('anxious').value);
+            motivatedValue = Number(document.getElementById('motivated').value);
+            tiredValue = Number(document.getElementById('tired').value);
+
+            chartData = [
+                angryValue,
+                sadValue,
+                happyValue,
+                anxiousValue,
+                motivatedValue,
+                tiredValue
+            ]
+            removeData(myChart)
+            addData(myChart, chartData)
+
+        }
+
+        var moodBtn = document.querySelectorAll('.mood-btn');
+        moodBtn.forEach(btn => {
+            btn.addEventListener('click', updateChart, false);
+        })
+
+        function validateSemana() {
+            var primeiraSemana = document.getElementById('angry').value;
+            var segundaSemana = document.getElementById('sad').value;
+            var terceiraSemana = document.getElementById('happy').value;
+            var quartaSemana = document.getElementById('anxious').value;
+            var quintaSemana = document.getElementById('motivated').value;
+
+            if (primeiraSemana == "") {
+                primeira
+            } else if (segundaSemana == "") {
+                alert("Digite um numero ou 0.")
+            } else if (terceiraSemana == "") {
+                alert("Digite um numero ou 0.")
+            } else if (quartaSemana == "") {
+                alert("Digite um numero ou 0.")
+            } else if (quintaSemana == "") {
+                alert("Digite um numero ou 0.")
+            } else {
+                alert("Dados validos");
+            }
+        }
+
+        function alertPage() {
+            Swal.fire({
+                icon: 'success',
+                html: '<i class="fa-sharp fa-solid fa-download fa-4x"></i>',
+                backdrop: `
+                   rgba(0,0,123,0.4)
+                   left top
+                   no-repeat
+                `,
+                title: 'Gere seu report de maneira fácil',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
